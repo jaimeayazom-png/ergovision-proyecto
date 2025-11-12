@@ -5,7 +5,6 @@ import {
   collection,
   addDoc,
   deleteDoc,
-  updateDoc,
   doc,
   onSnapshot,
   query,
@@ -24,7 +23,7 @@ function AdminPanel() {
   const [mensaje, setMensaje] = useState("");
   const [subiendo, setSubiendo] = useState(false);
 
-  // 🧠 Escuchar productos en tiempo real
+  // Escuchar productos en tiempo real
   useEffect(() => {
     const q = query(collection(db, "productos"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -37,13 +36,13 @@ function AdminPanel() {
     return () => unsubscribe();
   }, []);
 
-  // 🔐 Cerrar sesión
+  // Cerrar sesión
   const handleLogout = async () => {
     await logout();
     window.location.reload();
   };
 
-  // 🧩 Subir imagen a Firebase Storage
+  //  Subir imagen a Firebase Storage
   const subirImagen = async (archivo) => {
     const imagenRef = ref(storage, `imagenes/${archivo.name}`);
     await uploadBytes(imagenRef, archivo);
@@ -51,7 +50,7 @@ function AdminPanel() {
     return { url, path: imagenRef.fullPath };
   };
 
-  // 🟢 Agregar o actualizar producto
+  //  Agregar o actualizar producto
   const handleGuardarProducto = async (e) => {
     e.preventDefault();
 
@@ -78,7 +77,7 @@ function AdminPanel() {
       }
 
       if (editando) {
-        // ✏️ Actualizar producto existente
+        //  Actualizar producto existente
         const refProducto = doc(db, "productos", editando);
         await updateDoc(refProducto, {
           nombre: nuevoProducto.nombre,
@@ -90,7 +89,7 @@ function AdminPanel() {
         });
         setMensaje("✅ Producto actualizado correctamente.");
       } else {
-        // 🟢 Agregar nuevo producto
+        // Agregar nuevo producto
         await addDoc(collection(db, "productos"), {
           nombre: nuevoProducto.nombre,
           descripcion: nuevoProducto.descripcion,
@@ -117,7 +116,7 @@ function AdminPanel() {
     }
   };
 
-  // 🗑️ Eliminar producto
+  // Eliminar producto
   const handleEliminar = async (id, imagenPath) => {
     try {
       await deleteDoc(doc(db, "productos", id));
@@ -131,7 +130,7 @@ function AdminPanel() {
     }
   };
 
-  // ✏️ Cargar producto en el formulario para editar
+  // Cargar producto en el formulario para editar
   const handleEditar = (producto) => {
     setNuevoProducto({
       nombre: producto.nombre,
